@@ -6,3 +6,59 @@ datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
+
+model alumnos {
+  id               Int          @id @default(autoincrement())
+  nombre           String       @db.VarChar(100)
+  apellido         String       @db.VarChar(100)
+  grado            String       @db.VarChar(50)
+  seccion          String       @db.VarChar(10)
+  fecha_nacimiento DateTime?    @db.Date
+  creado_en        DateTime?    @default(now()) @db.Timestamp(6)
+  asistencia       asistencia[]
+  notas            notas[]
+}
+
+model asistencia {
+  id          Int      @id @default(autoincrement())
+  alumno_id   Int?
+  curso_id    Int?
+  fecha       DateTime @db.Date
+  presente    Boolean
+  justificado Boolean? @default(false)
+  alumnos     alumnos? @relation(fields: [alumno_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  cursos      cursos?  @relation(fields: [curso_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+}
+
+model cursos {
+  id          Int          @id @default(autoincrement())
+  nombre      String       @db.VarChar(100)
+  grado       String       @db.VarChar(50)
+  seccion     String       @db.VarChar(10)
+  profesor_id Int?
+  asistencia  asistencia[]
+  usuarios    usuarios?    @relation(fields: [profesor_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  notas       notas[]
+}
+
+model notas {
+  id        Int       @id @default(autoincrement())
+  alumno_id Int?
+  curso_id  Int?
+  nota      Decimal?  @db.Decimal(5, 2)
+  tipo      String?   @db.VarChar(50)
+  fecha     DateTime? @default(dbgenerated("CURRENT_DATE")) @db.Date
+  alumnos   alumnos?  @relation(fields: [alumno_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  cursos    cursos?   @relation(fields: [curso_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+}
+
+model usuarios {
+  id        Int       @id @default(autoincrement())
+  nombre    String    @db.VarChar(100)
+  apellido  String    @db.VarChar(100)
+  email     String    @unique @db.VarChar(100)
+  password  String    @db.VarChar(255)
+  rol       String    @db.VarChar(20)
+  creado_en DateTime? @default(now()) @db.Timestamp(6)
+  cursos    cursos[]
+}
