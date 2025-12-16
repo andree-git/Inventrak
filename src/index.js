@@ -17,7 +17,7 @@ app.get("/", (req, res) => {
 // Test de base de datos
 app.get("/usuario", async (req, res) => {
   try {
-    const usuarios = await prisma.usuarios.findMany();
+    const usuarios = await prisma.Usuario.findMany();
     res.json(usuarios);
   } catch (error) {
     res.status(500).json({ error: error.message });

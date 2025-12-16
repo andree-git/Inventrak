@@ -6,42 +6,37 @@ const prisma = require("../prisma");
 const router = express.Router();
 
 router.post("/login", async (req, res) => {
-  const { email, password } = req.body;
+  const { usuario, password } = req.body;
 
   try {
-    // 1. Buscar usuario por email
-    const usuario = await prisma.usuarios.findUnique({
-      where: { email },
+    const user = await prisma.Usuario.findUnique({
+      where: { usuario },
     });
 
-    if (!usuario) {
+    if (!user) {
       return res.status(401).json({ message: "Usuario no existe" });
     }
 
-    // 2. Comparar contraseña
-    const passwordOk = await bcrypt.compare(password, usuario.password);
-
+    const passwordOk = await bcrypt.compare(password, user.password);
     if (!passwordOk) {
       return res.status(401).json({ message: "Contraseña incorrecta" });
     }
 
-    // 3. Crear token
     const token = jwt.sign(
       {
-        id: usuario.id,
-        rol: usuario.rol,
+        id: user.id,
+        rol: user.rol,
       },
-      process.env.JWT_SECRET || "secreto",
+      process.env.JWT_SECRET,
       { expiresIn: "1d" }
     );
 
-    // 4. Respuesta
     res.json({
       token,
       usuario: {
-        id: usuario.id,
-        apellido: usuario.apellido,
-        rol: usuario.rol,
+        id: user.id,
+        usuario: user.usuario,
+        rol: user.rol,
       },
     });
   } catch (error) {
