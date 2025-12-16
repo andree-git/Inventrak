@@ -1,5 +1,5 @@
 const prisma = require("../prisma");
-const bcrypt = require("bcrypt");
+const bcrypt = require("bcryptjs");
 
 // GET /usuario
 exports.getUsuarios = async (req, res) => {
