@@ -3,8 +3,8 @@ const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 
 const loginService = async (usuario, password) => {
-  // Buscar usuario
-  const user = await prisma.usuario.findUnique({
+
+  const user = await prisma.usuarios.findUnique({  // ← nombre correcto
     where: { usuario },
   });
 
@@ -12,13 +12,11 @@ const loginService = async (usuario, password) => {
     throw new Error("Usuario no encontrado o inactivo");
   }
 
-  // Comparar contraseña
   const passwordOk = await bcrypt.compare(password, user.password);
   if (!passwordOk) {
     throw new Error("Contraseña incorrecta");
   }
 
-  // Generar token
   const token = jwt.sign(
     {
       id: user.id,
