@@ -5,8 +5,8 @@
   "main": "src/index.js",
   "type": "commonjs",
   "scripts": {
-    "start": "node src/index.js",
-    "dev": "node src/index.js",
+    "start": "node src/server.js",
+    "dev": "node src/server.js",
     "build": "prisma generate",
     "postinstall": "prisma generate",
     "migrate": "prisma migrate deploy"
@@ -19,7 +19,7 @@
     "bcryptjs": "^3.0.3",
     "cors": "^2.8.5",
     "dotenv": "^17.2.3",
-    "express": "^5.2.1",
+    "express": "^4.22.1",
     "jsonwebtoken": "^9.0.3"
   },
   "devDependencies": {
