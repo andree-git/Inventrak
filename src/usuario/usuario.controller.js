@@ -40,7 +40,15 @@ exports.createUsuario = async (req, res) => {
 
     res.status(201).json({ message: "Usuario creado", id: nuevo.id });
   } catch (error) {
-    res.status(400).json({ error: error.message });
+    if (error.code === 'P2002') {
+      return res.status(400).json({
+        error: 'El nombre de usuario ya existe'
+    });
+  }
+
+  res.status(400).json({ error: error.message });
+}
+
   }
 };
 
